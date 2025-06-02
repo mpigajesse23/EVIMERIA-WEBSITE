@@ -1,0 +1,101 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Django
+*.log
+*.pot
+*.pyc
+db.sqlite3
+db.sqlite3-journal
+media/
+static/
+
+# Frontend
+node_modules/
+.npm
+.eslintcache
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# IDEs and editors
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+*.code-workspace
+
+# Docker
+.docker/
+docker-compose.override.yml
+
+# Environnement
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+
+# Autres
+.DS_Store
+Thumbs.db
+.coverage
+htmlcov/
+.pytest_cache/
+.tox/
+.hypothesis/
+.nyc_output
+coverage/
+
+# Fichiers de sauvegarde
+*~
+*.swp
+*.swo
+*.bak
+*.tmp
+*.temp
+
+# Dossiers spécifiques
+/backend/media/
+/backend/static/
+/backend/staticfiles/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Cache
+.cache/
+.parcel-cache/
+.rpt2_cache/
+.rts2_cache_cjs/
+.rts2_cache_es/
+.rts2_cache_umd/ 
