@@ -5,7 +5,10 @@
   "private": true,
   "scripts": {
     "dev": "netlify dev",
-    "build": "cd frontend && npm run build"
+    "build": "cd frontend && npm run build",
+    "deploy": "netlify deploy --prod",
+    "deploy:functions": "netlify functions:deploy",
+    "check:functions": "netlify functions:list"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.39.0",
