@@ -27,7 +27,8 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-c+h11ba43(notowv31(&=
 DEBUG = os.environ.get('DEBUG', 'False').lower() == 'true'
 
 # Compatibilité avec les deux noms de variables pour ALLOWED_HOSTS
-ALLOWED_HOSTS = ['*']
+# En production, ajoutez le domaine Railway (ex: .railway.app) dans les variables d'environnement
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '*').split(',')
 
 
 # Application definition
