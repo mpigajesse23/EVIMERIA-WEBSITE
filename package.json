@@ -1,0 +1,16 @@
+{
+  "name": "evimeria-serverless",
+  "version": "1.0.0",
+  "description": "Fonctions serverless pour EVIMERIA e-commerce",
+  "private": true,
+  "scripts": {
+    "dev": "netlify dev",
+    "build": "cd frontend && npm run build"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.0"
+  },
+  "devDependencies": {
+    "netlify-cli": "^17.15.0"
+  }
+}

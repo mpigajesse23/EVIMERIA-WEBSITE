@@ -1,4 +1,4 @@
-
+<!-- filepath: c:\Users\Asus\Documents\Mes Projet Webs\EVIMERIA-WEBSITE\technologies.md -->
 ## 🧱 **Stack Technologique du Projet E-commerce de Mode – *Jaelle Shop***
 
 ---
@@ -19,18 +19,18 @@
 ### 🎨 **Front-end (séparé via API)**
 
 * **React.js** – Librairie JavaScript pour construire une interface utilisateur réactive
-* **Vite** – Outil de build ultra-rapide pour initialiser et développer l’app React
+* **Vite** – Outil de build ultra-rapide pour initialiser et développer l'app React
 * **Tailwind CSS** – Framework CSS utilitaire pour un design moderne et responsive
-* **Axios** – Pour interagir efficacement avec l’API Django
+* **Axios** – Pour interagir efficacement avec l'API Django
 * **React Router** – Pour gérer la navigation entre les pages de manière fluide
 * **React Hook Form** *(optionnel)* – Pour une gestion simple et puissante des formulaires
-* **Redux Toolkit** ou **Context API** – Pour la gestion globale de l’état (panier, utilisateur, etc.)
+* **Redux Toolkit** ou **Context API** – Pour la gestion globale de l'état (panier, utilisateur, etc.)
 
 ---
 
 ### 🌫️ **Média & Stockage**
 
-* **Cloudinary** – Solution cloud pour le stockage, la gestion et l’optimisation des images (produits, utilisateurs…)
+* **Cloudinary** – Solution cloud pour le stockage, la gestion et l'optimisation des images (produits, utilisateurs…)
 
 ---
 
@@ -44,11 +44,10 @@
 
 ### 📦 **Déploiement & Hébergement**
 
-* **Railway** – Plateforme cloud simple et rapide pour déployer :
-
-  * L’API Django + PostgreSQL
-  * L’application React
-  * La configuration des variables d’environnement
+* **Docker et Docker Compose** – Pour la conteneurisation et le déploiement facile :
+  * L'API Django + PostgreSQL
+  * L'application React
+  * La configuration des variables d'environnement
 * **GitHub** – Pour le versionnage du code et la collaboration
 * **GitHub Actions** – Pour automatiser les workflows de CI/CD (déploiement, tests…)
 
@@ -56,5 +55,5 @@
 
 ### 🔐 **Sécurité**
 
-* **HTTPS** (via Let’s Encrypt avec Railway ou Nginx) – Pour chiffrer les échanges de données
-* **Django Allauth** ou **Djoser + JWT** – Pour une gestion robuste de l’authentification
+* **HTTPS** (via Let's Encrypt avec Nginx) – Pour chiffrer les échanges de données
+* **Django Allauth** ou **Djoser + JWT** – Pour une gestion robuste de l'authentification
