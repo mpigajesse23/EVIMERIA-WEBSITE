@@ -2,10 +2,11 @@
 // Script pour valider la connexion à Supabase et les endpoints
 
 const { createClient } = require('@supabase/supabase-js');
+require('dotenv').config();
 
-// Configuration Supabase (même que dans api.js)
-const supabaseUrl = 'https://jbxyihenvutqwkknlelh.supabase.co';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpienlpaGVudnV0cXdra25sZWxoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzI1NzQwOTAsImV4cCI6MjA0ODE1MDA5MH0.yU-VJNnfJAQ2MhzYOJZrmAJdpj5gOBnRkE9t_XJd_6s';
+// Configuration Supabase (avec variables d'environnement en fallback)
+const supabaseUrl = process.env.SUPABASE_URL || 'https://jbxyihenvutqwkknlelh.supabase.co';
+const supabaseKey = process.env.SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpieHlpaGVudnV0cXdra25sZWxoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg5MzcwNDgsImV4cCI6MjA2NDUxMzA0OH0.KfohW3qnKM-2MH2i4c5xaIbvwLHePVadplCNMiy4U5E';
 
 async function testSupabaseConnection() {
   console.log('🔌 Test de connexion à Supabase...\n');

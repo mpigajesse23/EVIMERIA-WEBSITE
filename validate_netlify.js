@@ -57,7 +57,7 @@ try {
     console.log('❌ Redirection API manquante');
   }
   
-  if (netlifyConfig.includes('frontend/dist')) {
+  if (netlifyConfig.includes('publish = "frontend/dist"') || netlifyConfig.includes('frontend/dist')) {
     console.log('✅ Dossier de publication configuré');
   } else {
     console.log('❌ Dossier de publication manquant');
