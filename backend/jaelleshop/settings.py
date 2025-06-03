@@ -16,6 +16,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Chemin vers le dossier du frontend
 FRONTEND_DIR = os.path.abspath(os.path.join(BASE_DIR, '..', 'frontend'))
 
+print("PORT Railway:", os.environ.get('PORT'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
