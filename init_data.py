@@ -187,7 +187,6 @@ def create_demo_products(cursor):
                 print("    ✓ Image ajoutée directement au produit")
             except Exception as upd_error:
                 print(f"    ❌ Impossible de mettre à jour l'image: {upd_error}")
-        )
         
         print(f"  + {product['name']} créé (ID: {product_id})")
 
