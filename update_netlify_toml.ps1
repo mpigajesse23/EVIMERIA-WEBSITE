@@ -1,3 +1,4 @@
+$netlifyContent = @'
 [build]
   publish = "frontend/dist"
   command = "cd frontend && npm ci --legacy-peer-deps && npm run build"
@@ -10,19 +11,13 @@
 [functions]
   directory = "frontend/netlify/functions"
 
-[[headers]]
-  for = "/*"
-    [headers.values]
-    Access-Control-Allow-Origin = "*"
-    Access-Control-Allow-Methods = "GET, POST, PUT, DELETE, OPTIONS"
-    Access-Control-Allow-Headers = "Origin, X-Requested-With, Content-Type, Accept"
-
+# Redirections pour l'API vers les fonctions Netlify
 [[redirects]]
   from = "/api/*"
   to = "/.netlify/functions/api/:splat"
   status = 200
-  force = true
 
+# SPA redirect
 [[redirects]]
   from = "/*"
   to = "/index.html"
@@ -33,3 +28,6 @@
 
 [context.deploy-preview.environment]
   VITE_API_URL = "/.netlify/functions"
+'@
+
+Set-Content -Path "netlify.toml" -Value $netlifyContent

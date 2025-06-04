@@ -4,8 +4,24 @@
 const { createClient } = require('@supabase/supabase-js');
 
 // Configuration Supabase
-const supabaseUrl = process.env.SUPABASE_URL || 'https://jbxyihenvutqwkknlelh.supabase.co';
-const supabaseKey = process.env.SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpieHlpaGVudnV0cXdra25sZWxoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg5MzcwNDgsImV4cCI6MjA2NDUxMzA0OH0.KfohW3qnKM-2MH2i4c5xaIbvwLHePVadplCNMiy4U5E';
+const supabaseUrl = process.env.SUPABASE_URL;
+// Utiliser la clé de service pour les fonctions Netlify
+const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+if (!supabaseUrl || !supabaseKey) {
+  console.error('Variables d\'environnement manquantes:', {
+    SUPABASE_URL: !!supabaseUrl,
+    SUPABASE_SERVICE_ROLE_KEY: !!supabaseKey
+  });
+  throw new Error('Variables d\'environnement Supabase manquantes');
+}
+
+console.log('Initialisation du client Supabase avec:', {
+  url: supabaseUrl,
+  keyLength: supabaseKey.length,
+  keyType: 'SERVICE_ROLE'
+});
+
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 exports.handler = async (event, context) => {
@@ -52,12 +68,18 @@ exports.handler = async (event, context) => {
 
     // Route de santé
     if (path === '/health') {
+      const { data: healthCheck, error: healthError } = await supabase
+        .from('products_category')
+        .select('count')
+        .limit(1);
+
       return {
         statusCode: 200,
         headers,
         body: JSON.stringify({
           status: 'healthy',
-          database: 'connected',
+          database: healthError ? 'disconnected' : 'connected',
+          error: healthError ? healthError.message : null,
           timestamp: new Date().toISOString()
         })
       };
@@ -66,21 +88,27 @@ exports.handler = async (event, context) => {
     // Route pour les produits
     if (path.startsWith('/products')) {
       if (method === 'GET') {
+        console.log('Récupération des produits...');
         // Récupérer tous les produits depuis Supabase
         const { data, error } = await supabase
           .from('products_product')
-          .select('*')
+          .select('*, category:products_category(name)')
           .eq('is_published', true);
 
         if (error) {
-          console.error('Erreur Supabase:', error);
+          console.error('Erreur Supabase lors de la récupération des produits:', error);
           return {
             statusCode: 500,
             headers,
-            body: JSON.stringify({ error: 'Erreur base de données' })
+            body: JSON.stringify({ 
+              error: 'Erreur base de données',
+              details: error.message,
+              code: error.code
+            })
           };
         }
 
+        console.log(`${data ? data.length : 0} produits trouvés`);
         return {
           statusCode: 200,
           headers,
@@ -95,20 +123,26 @@ exports.handler = async (event, context) => {
     // Route pour les catégories
     if (path.startsWith('/categories')) {
       if (method === 'GET') {
+        console.log('Récupération des catégories...');
         const { data, error } = await supabase
           .from('products_category')
           .select('*')
           .eq('is_published', true);
 
         if (error) {
-          console.error('Erreur Supabase:', error);
+          console.error('Erreur Supabase lors de la récupération des catégories:', error);
           return {
             statusCode: 500,
             headers,
-            body: JSON.stringify({ error: 'Erreur base de données' })
+            body: JSON.stringify({ 
+              error: 'Erreur base de données',
+              details: error.message,
+              code: error.code
+            })
           };
         }
 
+        console.log(`${data ? data.length : 0} catégories trouvées`);
         return {
           statusCode: 200,
           headers,
@@ -138,7 +172,8 @@ exports.handler = async (event, context) => {
       headers,
       body: JSON.stringify({
         error: 'Erreur serveur interne',
-        message: error.message
+        message: error.message,
+        stack: error.stack
       })
     };
   }
