@@ -8,6 +8,10 @@ const supabaseUrl = process.env.SUPABASE_URL;
 // Utiliser la clé de service pour les fonctions Netlify
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
+console.log('Variables d\'environnement lues:');
+console.log('SUPABASE_URL:', supabaseUrl ? 'Présente' : 'Manquante');
+console.log('SUPABASE_SERVICE_ROLE_KEY:', supabaseKey ? 'Présente et a une longueur de' : 'Manquante', supabaseKey ? supabaseKey.length : '');
+
 if (!supabaseUrl || !supabaseKey) {
   console.error('Variables d\'environnement manquantes:', {
     SUPABASE_URL: !!supabaseUrl,
