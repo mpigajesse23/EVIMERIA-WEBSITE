@@ -57,7 +57,7 @@ def simplified_health_check(request):
 
 # Endpoint ultra-minimal pour le healthcheck
 def minimal_status(request):
-    """Endpoint minimal pour le healthcheck du serveur"""
+    """Endpoint minimal pour le healthcheck de Railway"""
     return HttpResponse(status=200)
 
 def check_db_connection():

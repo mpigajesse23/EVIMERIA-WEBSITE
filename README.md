@@ -1,261 +1,146 @@
 # EVIMERIA (anciennement JaelleShop)
 
-Boutique e-commerce moderne avec architecture serverless : **Netlify Functions + Supabase + React**.
+Boutique e-commerce moderne créée avec Django, React et Cloudinary.
 
-## 🚀 Architecture Serverless
+## Prérequis
 
-- **Frontend** : React + Vite (hébergé sur Netlify)
-- **Backend** : Netlify Functions (serverless)
-- **Base de données** : Supabase PostgreSQL
-- **Stockage médias** : Cloudinary
-- **Déploiement** : Netlify (automatique depuis GitHub)
+- Docker et Docker Compose pour le développement local
+- Un compte Railway pour le déploiement
+- Un compte Cloudinary pour la gestion des médias
 
-## ⚡ Déploiement Rapide
-
-### Option 1: Déploiement sur Netlify (Recommandé)
-
-1. **Fork ce dépôt** sur GitHub
-2. **Connectez-le à Netlify** (connexion automatique)
-3. **Configurez les variables d'environnement** dans Netlify
-4. **Déployez automatiquement** 🎉
-
-📖 **Guide détaillé** : [NETLIFY_DEPLOYMENT.md](./NETLIFY_DEPLOYMENT.md)
-
-### Option 2: Développement Local
-
-```bash
-# Installer les dépendances
-npm install
-cd frontend && npm install && cd ..
-
-# Démarrer le développement local
-npm run dev
-# ou
-netlify dev
-```
-
-## 🗂️ Structure du Projet
+## Structure du Projet
 
 ```
 evimeria/
-├── frontend/              # Application React + Vite
-├── netlify/functions/     # API Serverless (remplace Django)
-├── backend/              # Code Django (pour référence/migration)
-├── netlify.toml          # Configuration Netlify
-├── package.json          # Dépendances serverless
-└── NETLIFY_DEPLOYMENT.md # Guide de déploiement
-## 📊 Configuration
-
-### Variables d'Environnement Netlify
-
-```bash
-# Supabase
-SUPABASE_URL=https://jbxyihenvutqwkknlelh.supabase.co
-SUPABASE_ANON_KEY=your_anon_key
-SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
-
-# Frontend
-VITE_API_URL=/.netlify/functions
-VITE_CLOUDINARY_CLOUD_NAME=dmcaguchx
+├── backend/            # API Django
+│   ├── Dockerfile      # Dockerfile du backend (dev local)
+│   ├── Procfile        # Configuration démarrage Railway
+│   ├── jaelleshop/     # Configurations du projet
+│   ├── products/       # App pour les produits
+│   ├── users/          # App pour les utilisateurs
+│   └── ...
+├── frontend/           # Application React
+│   ├── Dockerfile      # Dockerfile du frontend (dev local)
+│   ├── nginx.conf      # Configuration Nginx (dev local)
+│   └── ...
+├── docker-compose.yml  # Configuration Docker Compose (dev local)
+├── railway.toml        # Configuration Railway
+├── .github/workflows/  # Configuration CI/CD GitHub Actions
+└── ...
 ```
 
-### Base de Données Configurée
+## Déploiement sur Railway
 
-✅ **Supabase PostgreSQL** déjà configuré et fonctionnel
-- URL: `postgresql://postgres.jbxyihenvutqwkknlelh:MPIGAjes$e2025@@aws-0-eu-west-3.pooler.supabase.com:6543/postgres`
-- Admin créé: `mpigajesse23@gmail.com`
-- Toutes les migrations appliquées
+### 1. Préparation du code
 
-## 🔧 Développement Local (Optionnel)
+Assurez-vous que votre dépôt contient tous les fichiers suivants:
+- `backend/Procfile`
+- `railway.toml`
+- `.github/workflows/railway-deploy.yml`
 
-Si vous voulez développer localement avec Docker :
+### 2. Configuration des secrets GitHub
+
+Allez dans les paramètres de votre dépôt GitHub et ajoutez le secret suivant:
+
+```
+RAILWAY_TOKEN=votre_token_railway
+```
+
+Vous pouvez obtenir un token Railway en exécutant `railway login` localement ou en allant dans les paramètres de votre compte Railway.
+
+### 3. Configuration des variables d'environnement
+
+Dans Railway, configurez les variables d'environnement suivantes:
+
+```
+# Configuration Django
+DEBUG=False
+SECRET_KEY=votre_secret_key
+ALLOWED_HOSTS=*.up.railway.app,localhost,127.0.0.1
+
+# Cloudinary
+CLOUDINARY_CLOUD_NAME=dmcaguchx
+CLOUDINARY_API_KEY=votre_api_key
+CLOUDINARY_API_SECRET=votre_api_secret
+
+# Configuration de l'application
+PORT=8000
+PYTHONUNBUFFERED=1
+NODE_ENV=production
+```
+
+### 4. Déploiement automatique avec GitHub Actions
+
+1. Poussez votre code sur la branche main de votre dépôt GitHub
+2. GitHub Actions va automatiquement déployer l'application sur Railway
+
+3. Vous pouvez également déclencher manuellement le déploiement depuis l'onglet "Actions" de votre dépôt GitHub.
+
+### 5. Déploiement manuel sur Railway
+
+Si vous préférez déployer manuellement:
+
+1. Installez la CLI Railway : `npm i -g @railway/cli`
+2. Connectez-vous : `railway login`
+3. Liez votre projet : `railway link`
+4. Déployez : `railway up`
+
+## Développement local avec Docker
 
 ```bash
 # Créer un fichier .env à partir de .env.example
 cp .env.example .env
+# Modifier le fichier .env avec vos propres valeurs
 
 # Démarrer l'application en mode développement
 docker-compose up
 
+# Reconstruire l'application après des modifications
+docker-compose up --build
+
 # Exécuter des commandes dans le conteneur backend
 docker-compose exec backend python manage.py createsuperuser
 ```
-   - PGUSER
 
-## Déploiement sur Render (Gratuit - Sans carte bancaire)
+## Maintenance
 
-### 1. Préparation
-
-1. Assurez-vous que votre code est sur GitHub
-2. Créez un compte gratuit sur [Render.com](https://render.com)
-3. Obtenez vos identifiants Cloudinary
-
-### 2. Déploiement du Backend (Django)
-
-1. Sur Render, cliquez sur "New +" → "Web Service"
-2. Connectez votre repository GitHub
-3. Configurez le service :
-   - **Name**: `evimeria-backend`
-   - **Environment**: `Python 3`
-   - **Build Command**: `./build.sh`
-   - **Start Command**: `./start.sh`
-   - **Instance Type**: `Free`
-
-4. Ajoutez les variables d'environnement :
-   ```
-   SECRET_KEY=généré-automatiquement-par-render
-   DEBUG=False
-   ALLOWED_HOSTS=evimeria-backend.onrender.com
-   CLOUDINARY_CLOUD_NAME=votre-cloud-name
-   CLOUDINARY_API_KEY=votre-api-key
-   CLOUDINARY_API_SECRET=votre-api-secret
-   ```
-
-### 3. Déploiement de la Base de Données
-
-1. Sur Render, cliquez sur "New +" → "PostgreSQL"
-2. Configurez :
-   - **Name**: `evimeria-db`
-   - **Database Name**: `evimeria`
-   - **User**: `evimeria_user`
-   - **Plan**: `Free`
-
-3. Une fois créée, copiez la `DATABASE_URL` et ajoutez-la aux variables d'environnement du backend
-
-### 4. Déploiement du Frontend (React)
-
-1. Sur Render, cliquez sur "New +" → "Static Site"
-2. Connectez votre repository GitHub
-3. Configurez :
-   - **Name**: `evimeria-frontend`
-   - **Build Command**: `cd frontend && npm ci --legacy-peer-deps && npm run build`
-   - **Publish Directory**: `frontend/dist`
-
-4. Ajoutez la variable d'environnement :
-   ```
-   VITE_API_URL=https://evimeria-backend.onrender.com
-   ```
-
-### 5. Configuration finale
-
-Une fois les services déployés :
-1. Mettez à jour `ALLOWED_HOSTS` dans le backend avec l'URL de votre frontend
-2. Configurez CORS dans Django pour autoriser votre frontend
-3. Testez votre application
-
-### 6. URLs de votre application
-
-- **Frontend**: `https://evimeria-frontend.onrender.com`
-- **Backend API**: `https://evimeria-backend.onrender.com`
-- **Admin Django**: `https://evimeria-backend.onrender.com/admin`
-
-### Limitations du plan gratuit Render
-
-- Les services "s'endorment" après 15 minutes d'inactivité
-- Premier chargement peut être lent (cold start)
-- 750h d'utilisation par mois
-- Base de données PostgreSQL limitée à 1GB
-
-## Alternatives d'hébergement gratuit
-
-### Vercel + PlanetScale
-- **Vercel** pour le frontend React
-- **PlanetScale** pour la base de données MySQL (gratuit)
-- **Vercel Functions** pour quelques endpoints backend
-
-### Netlify + Supabase
-- **Netlify** pour le frontend
-- **Supabase** pour la base de données PostgreSQL + API backend
-
-## Déploiement avec Netlify + Supabase (Recommandé - 100% Gratuit)
-
-Cette solution combine **Netlify** pour le frontend et **Render** pour le backend Django, avec **Supabase** comme base de données PostgreSQL.
-
-### 1. Configuration de la base de données Supabase
-
-Votre base de données Supabase est déjà configurée :
-- **Hôte** : db.jbxyihenvutqwkknlelh.supabase.co
-- **Port** : 5432
-- **Base de données** : postgres
-- **URL de connexion** : `postgresql://postgres.jbxyihenvutqwkknlelh:MPIGAjes%24e2025%40%40@aws-0-eu-west-3.pooler.supabase.com:6543/postgres`
-
-### 2. Déploiement du Backend sur Render
-
-1. **Créer un compte Render gratuit** : [render.com](https://render.com)
-
-2. **Déployer le backend** :
-   - Cliquez sur "New +" → "Web Service"
-   - Connectez votre repository GitHub
-   - Configurez le service :
-     - **Name** : `evimeria-backend`
-     - **Environment** : `Python 3`
-     - **Build Command** : `./build.sh`
-     - **Start Command** : `./start.sh`
-     - **Instance Type** : `Free`
-
-3. **Variables d'environnement Render** :
-   ```
-   SECRET_KEY=your-django-secret-key
-   DEBUG=False
-   ALLOWED_HOSTS=evimeria-backend.onrender.com,evimeria-frontend.netlify.app
-   DATABASE_URL=postgresql://postgres.jbxyihenvutqwkknlelh:MPIGAjes%24e2025%40%40@aws-0-eu-west-3.pooler.supabase.com:6543/postgres
-   CLOUDINARY_CLOUD_NAME=your-cloudinary-cloud-name
-   CLOUDINARY_API_KEY=your-cloudinary-api-key
-   CLOUDINARY_API_SECRET=your-cloudinary-api-secret
-   CORS_ALLOWED_ORIGINS=https://evimeria-frontend.netlify.app
-   ```
-
-### 3. Déploiement du Frontend sur Netlify
-
-1. **Créer un compte Netlify gratuit** : [netlify.com](https://netlify.com)
-
-2. **Déployer le frontend** :
-   - Connectez votre repository GitHub
-   - Netlify détectera automatiquement la configuration `netlify.toml`
-   - Le build se lancera automatiquement
-
-3. **Variables d'environnement Netlify** :
-   ```
-   VITE_API_URL=https://evimeria-backend.onrender.com
-   ```
-
-### 4. Configuration finale
-
-Une fois les deux services déployés :
-
-1. **Mettre à jour les URLs** :
-   - Notez l'URL de votre backend Render (ex: `evimeria-backend.onrender.com`)
-   - Notez l'URL de votre frontend Netlify (ex: `evimeria-frontend.netlify.app`)
-
-2. **Mettre à jour les variables d'environnement** :
-   - Sur Render : Ajoutez l'URL Netlify dans `ALLOWED_HOSTS` et `CORS_ALLOWED_ORIGINS`
-   - Sur Netlify : Vérifiez que `VITE_API_URL` pointe vers votre backend Render
-
-3. **Tester l'application** :
-   - Frontend : `https://votre-app.netlify.app`
-   - Backend API : `https://votre-backend.onrender.com/api/`
-   - Admin Django : `https://votre-backend.onrender.com/admin/`
-
-### 5. Avantages de cette solution
-
-✅ **100% Gratuit** - Aucune carte bancaire requise
-✅ **Déploiement automatique** - Push sur GitHub = déploiement automatique
-✅ **SSL inclus** - HTTPS par défaut
-✅ **Scalable** - Peut gérer un trafic modéré
-✅ **Base de données robuste** - PostgreSQL via Supabase
-
-### 6. Limitations
-
-- **Render** : Cold start après 15min d'inactivité
-- **Netlify** : 100GB de bande passante/mois
-- **Supabase** : 500MB de stockage, 2 projets max
-
-### 7. Commandes de test en local avec Supabase
+### Migration de la base de données
 
 ```bash
-# Tester la connexion Supabase en local
-cd backend
-export DATABASE_URL="postgresql://postgres.jbxyihenvutqwkknlelh:MPIGAjes%24e2025%40%40@aws-0-eu-west-3.pooler.supabase.com:6543/postgres"
-python manage.py migrate
-python manage.py runserver
+docker-compose exec backend python manage.py makemigrations
+docker-compose exec backend python manage.py migrate
 ```
+
+### Création d'un utilisateur admin
+
+```bash
+docker-compose exec backend python manage.py createsuperuser
+```
+
+### Sauvegarde et restauration de la base de données
+
+```bash
+# Sauvegarde
+docker-compose exec db pg_dump -U postgres railway > backup.sql
+
+# Restauration
+cat backup.sql | docker-compose exec -T db psql -U postgres railway
+``` 
+
+## Configuration des variables d'environnement pour l'application
+
+Pour que l'application fonctionne correctement, vous devez configurer les variables d'environnement suivantes dans Railway:
+
+1. **Pour le backend (Django)**:
+   - SECRET_KEY: Clé secrète Django pour la sécurité
+   - DEBUG: Toujours "False" en production
+   - CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET: Identifiants Cloudinary
+
+2. **Base de données**:
+   Railway configure automatiquement les variables suivantes pour PostgreSQL:
+   - DATABASE_URL
+   - PGDATABASE
+   - PGHOST
+   - PGPASSWORD
+   - PGPORT
+   - PGUSER 

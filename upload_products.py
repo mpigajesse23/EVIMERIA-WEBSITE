@@ -13,7 +13,6 @@ CATEGORIES = [
     'Montres',
     'Casquettes',
     'Baskets',
-    
 ]
 
 def main():
