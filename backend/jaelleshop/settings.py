@@ -24,7 +24,7 @@ FRONTEND_DIR = os.path.abspath(os.path.join(BASE_DIR, '..', 'frontend'))
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-c+h11ba43(notowv31(&=+)5^-h&$_2)9@#l4$_04ub5nr=53c')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DEBUG', 'False').lower() == 'true'
+DEBUG = True
 
 # Compatibilité avec les deux noms de variables pour ALLOWED_HOSTS
 ALLOWED_HOSTS = ['*']
@@ -90,30 +90,21 @@ WSGI_APPLICATION = 'jaelleshop.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-# Utiliser DATABASE_URL si disponible, sinon utiliser SQLite
-DATABASE_URL = os.environ.get('DATABASE_URL')
-if DATABASE_URL:
-    # Afficher que la base de données est configurée (sans les informations sensibles)
-    print(f"Utilisation de la base de données configurée via DATABASE_URL")
-    DATABASES = {
-        'default': dj_database_url.config(
-            default=DATABASE_URL,
-            conn_max_age=600,
-            conn_health_checks=True,
-            ssl_require=False,
-            options={
-                'sslmode': 'disable'
-            }
-        )
-    }
-else:
-    print("Aucune variable DATABASE_URL trouvée, utilisation de SQLite")
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+# Database configuration
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get('POSTGRES_DB', 'evimeria'),
+        'USER': os.environ.get('POSTGRES_USER', 'postgres'),
+        'PASSWORD': os.environ.get('POSTGRES_PASSWORD', ''),
+        'HOST': 'db',
+        'PORT': '5432',
+        'OPTIONS': {
+            'sslmode': 'disable',
+            'connect_timeout': 10
         }
     }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
@@ -151,9 +142,11 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATICFILES_DIRS = [
-    os.path.join(FRONTEND_DIR, 'dist'),
-]
+
+# Commentons temporairement STATICFILES_DIRS car le dossier dist n'existe pas encore
+# STATICFILES_DIRS = [
+#     os.path.join(FRONTEND_DIR, 'dist'),
+# ]
 
 # Configuration de Whitenoise pour les fichiers statiques (développement et production)
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
@@ -250,16 +243,16 @@ CORS_ALLOW_CREDENTIALS = True
 # Configuration du modèle utilisateur personnalisé
 AUTH_USER_MODEL = 'users.User'
 
-# URL de base pour l'environnement de production
-if not DEBUG:
-    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-    # Désactivation temporaire des redirections SSL pour le déploiement
-    SECURE_SSL_REDIRECT = False
-    SESSION_COOKIE_SECURE = False
-    CSRF_COOKIE_SECURE = False
-    SECURE_BROWSER_XSS_FILTER = True
-    SECURE_CONTENT_TYPE_NOSNIFF = True
-    X_FRAME_OPTIONS = 'DENY'
+# Configuration pour l'environnement de production (commenté pour le développement)
+# if not DEBUG:
+#     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+#     SECURE_SSL_REDIRECT = False
+#     SESSION_COOKIE_SECURE = False
+#     CSRF_COOKIE_SECURE = False
+#     SECURE_BROWSER_XSS_FILTER = True
+#     SECURE_CONTENT_TYPE_NOSNIFF = True
+#     X_FRAME_OPTIONS = 'DENY'
 
-# Configuration CORS
+# Configuration CORS pour le développement
 CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
