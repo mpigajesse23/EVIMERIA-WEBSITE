@@ -1,25 +1,25 @@
 # EVIMERIA (anciennement JaelleShop)
 
-Boutique e-commerce moderne avec architecture Django + PostgreSQL + React.
+Boutique e-commerce moderne avec architecture serverless : **Netlify Functions + Supabase + React**.
 
-## 🚀 Architecture
+## 🚀 Architecture Serverless
 
-- **Frontend** : React + Vite
-- **Backend** : Django
-- **Base de données** : PostgreSQL
+- **Frontend** : React + Vite (hébergé sur Netlify)
+- **Backend** : Netlify Functions (serverless)
+- **Base de données** : Supabase PostgreSQL
 - **Stockage médias** : Cloudinary
-- **Déploiement** : Options multiples (VPS, PaaS, Docker)
+- **Déploiement** : Netlify (automatique depuis GitHub)
 
-## ⚡ Déploiement
+## ⚡ Déploiement Rapide
 
-### Option 1: Déploiement avec Docker (Recommandé)
+### Option 1: Déploiement sur Netlify (Recommandé)
 
-1. **Cloner ce dépôt** sur votre serveur
-2. **Configurer les variables d'environnement** dans `.env`
-3. **Exécuter avec Docker Compose** : `docker-compose up -d`
-4. **Initialiser la base de données** : `docker-compose exec web python manage.py migrate`
+1. **Fork ce dépôt** sur GitHub
+2. **Connectez-le à Netlify** (connexion automatique)
+3. **Configurez les variables d'environnement** dans Netlify
+4. **Déployez automatiquement** 🎉
 
-📖 **Guide détaillé** : [MIGRATION_GUIDE.md](./MIGRATION_GUIDE.md)
+📖 **Guide détaillé** : [NETLIFY_DEPLOYMENT.md](./NETLIFY_DEPLOYMENT.md)
 
 ### Option 2: Développement Local
 

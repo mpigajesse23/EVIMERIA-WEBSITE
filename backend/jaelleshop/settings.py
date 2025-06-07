@@ -4,24 +4,29 @@ import cloudinary
 import cloudinary.uploader
 import cloudinary.api
 from datetime import timedelta
-import dj_database_url
 from dotenv import load_dotenv
-
-# Charger les variables d'environnement
-load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Charger les variables d'environnement
+# Chercher le fichier .env dans le répertoire parent (racine du projet)
+env_path = os.path.join(BASE_DIR.parent, '.env')
+load_dotenv(env_path)
+
 # Chemin vers le dossier du frontend
-FRONTEND_DIR = os.path.abspath(os.path.join(BASE_DIR, '..', 'frontend'))
+FRONTEND_DIR = os.path.abspath(os.path.join(BASE_DIR, 'frontend'))
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-c+h11ba43(notowv31(&=+)5^-h&$_2)9@#l4$_04ub5nr=53c')
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-evimeria-secret-key-for-development-2024')
+
+# Ensure SECRET_KEY is not empty
+if not SECRET_KEY:
+    SECRET_KEY = 'django-insecure-evimeria-secret-key-for-development-2024'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -64,7 +69,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'products.middleware.CloudinaryRedirectMiddleware',  # Middleware pour rediriger les URLs Cloudinary
 ]
 
 ROOT_URLCONF = 'jaelleshop.urls'
@@ -100,8 +104,7 @@ DATABASES = {
         'HOST': 'db',
         'PORT': '5432',
         'OPTIONS': {
-            'sslmode': 'disable',
-            'connect_timeout': 10
+            'sslmode': 'disable'
         }
     }
 }
@@ -169,7 +172,7 @@ CLOUDINARY_STORAGE = {
     'MEDIA_TAG': 'jaelleshop',
     'STATIC_TAG': 'static',
     'STATICFILES_MANIFEST_ROOT': os.path.join(BASE_DIR, 'manifest'),
-    'FOLDER': 'jaelleshop',  # Dossier racine pour tous les uploads
+    'FOLDER': 'jaelleshop',  # Utilise la structure existante jaelleshop/categories/
     'AUTO_CREATE_FOLDERS': True,  # Créer automatiquement les dossiers
 }
 
@@ -177,7 +180,8 @@ CLOUDINARY_STORAGE = {
 cloudinary.config(
     cloud_name=CLOUDINARY_STORAGE['CLOUD_NAME'],
     api_key=CLOUDINARY_STORAGE['API_KEY'],
-    api_secret=CLOUDINARY_STORAGE['API_SECRET']
+    api_secret=CLOUDINARY_STORAGE['API_SECRET'],
+    secure=True  # Forcer HTTPS
 )
 
 # Media files configuration with Cloudinary
